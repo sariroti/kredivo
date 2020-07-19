@@ -1,0 +1,26 @@
+{
+  "name": "kredivo2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sariroti/kredivo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sariroti/kredivo/issues"
+  },
+  "homepage": "https://github.com/sariroti/kredivo#readme",
+  "dependencies": {
+    "bull": "^3.16.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "sequelize": "^6.3.3"
+  }
+}
