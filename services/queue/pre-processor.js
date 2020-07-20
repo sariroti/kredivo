@@ -1,5 +1,5 @@
-var bull = require('bull');
-var db = require('../../repositories/model/index');
+const bull = require('bull');
+const db = require('../../repositories/model/index');
 const {QUEUE_PRE_PROCESSOR} = require('../constants/index'); 
 
 var preProcessorQueue = new bull(QUEUE_PRE_PROCESSOR, 'redis://127.0.0.1:6379');
