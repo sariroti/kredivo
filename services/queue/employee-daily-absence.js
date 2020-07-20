@@ -1,6 +1,7 @@
-var bull = require('bull');
+const bull = require('bull');
+const {QUEUE_EMPLOYEE_DAILY_ABSENCE} = require('../constants/index'); 
 
-var employeeDailyAbsenceQueue = new bull('employee-daily-absence', 'redis://127.0.0.1:6379');
+var employeeDailyAbsenceQueue = new bull(QUEUE_EMPLOYEE_DAILY_ABSENCE, 'redis://127.0.0.1:6379');
 const db = require('../../repositories/model/index');
 
 employeeDailyAbsenceQueue.process(async(job) => {

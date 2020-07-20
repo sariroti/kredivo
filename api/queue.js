@@ -41,17 +41,10 @@ router.get('/', async(req, res) => {
             await employeeLeaveQueue.add({empNoStart, newEmpNoEnd});
         }
 
+        await employeeSalaryQueue.add({empNoStart, newEmpNoEnd}, { delay:10000 });
+
         empNoStart = newEmpNoEnd + 1;
-        
-    }
 
-    while(empNoStartSalary < empNoEnd){
-        var newEmpNoEnd = empNoStartSalary + 1000;
-        newEmpNoEnd = newEmpNoEnd > empNoEnd ? empNoEnd : newEmpNoEnd;
-        
-        await employeeSalaryQueue.add({empNoStartSalary, newEmpNoEnd});
-
-        empNoStartSalary = newEmpNoEnd + 1;
     }
 
     res.send('Queue started');

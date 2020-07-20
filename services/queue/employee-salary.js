@@ -1,6 +1,7 @@
 var bull = require('bull');
+const {QUEUE_EMPLOYEE_SALARY} = require('../constants/index'); 
 
-var employeeSalaryQueue = new bull('employee-salary', 'redis://127.0.0.1:6379');
+var employeeSalaryQueue = new bull(QUEUE_EMPLOYEE_SALARY, 'redis://127.0.0.1:6379');
 const db = require('../../repositories/model/index');
 
 employeeSalaryQueue.process(async(job) => {
