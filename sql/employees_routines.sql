@@ -134,12 +134,11 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_employee_avg_salary_title`(emp_no_start int, emp_no_end int)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_employee_avg_salary_title`()
 BEGIN
 select b.title, avg(c.salary) as avg_salary from employees a
 inner join titles  b on a.emp_no = b.emp_no and b.to_date = '9999-01-01'
-inner join salaries c on c.emp_no = a.emp_no and c.to_date = curdate()
-where a.emp_no between emp_no_start and emp_no_end
+inner join salaries c on c.emp_no = a.emp_no and c.to_date = (select to_date from salaries where emp_no = a.emp_no order by to_date desc limit 1)
 group by b.title;
 
 END ;;
@@ -266,4 +265,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-07-20 17:42:08
+-- Dump completed on 2020-07-20 18:23:45
