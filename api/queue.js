@@ -9,8 +9,10 @@ const employeeLeaveQueue = require('../services/queue/employee-leave').employeeL
 const employeeSalaryQueue = require('../services/queue/employee-salary').employeeSalaryQueue;
 
 router.get('/', async(req, res) => {
+   
+    preProcessorQueue.add();
     
-    var queryTotalEmployee = await db.sequelize.query(`select count(emp_no) as total_employee, 
+    const queryTotalEmployee = await db.sequelize.query(`select count(emp_no) as total_employee, 
                                                         (
                                                             select emp_no from employees
                                                             order by emp_no desc
@@ -24,15 +26,13 @@ router.get('/', async(req, res) => {
                                                         from employees`);
 
  
-    
-    var totalEmployee = queryTotalEmployee[0][0].total_employee;
+
+    const totalEmployee = queryTotalEmployee[0][0].total_employee;
     var empNoStart = queryTotalEmployee[0][0].emp_no_start;
     var empNoEnd = queryTotalEmployee[0][0].emp_no_end;
     var empNoEndLeave = empNoEnd / 2; // populate half of employee for leave data
 
-    var empNoStartSalary = empNoStart;
-
-    while(empNoStart < empNoEnd){
+    while (empNoStart < empNoEnd){
         var newEmpNoEnd = empNoStart + 1000;
         newEmpNoEnd = newEmpNoEnd > empNoEnd ? empNoEnd : newEmpNoEnd;
         await employeeDailyAbsenceLeaveQueue.add({empNoStart,newEmpNoEnd})
@@ -41,6 +41,15 @@ router.get('/', async(req, res) => {
             await employeeLeaveQueue.add({empNoStart, newEmpNoEnd});
         }
 
+        empNoStart = newEmpNoEnd + 1;
+
+    }
+
+    while (empNoStart < empNoEnd){
+
+        var newEmpNoEnd = empNoStart + 1000;
+        newEmpNoEnd = newEmpNoEnd > empNoEnd ? empNoEnd : newEmpNoEnd;
+       
         await employeeSalaryQueue.add({empNoStart, newEmpNoEnd}, { delay:10000 });
 
         empNoStart = newEmpNoEnd + 1;

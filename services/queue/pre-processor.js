@@ -1,11 +1,11 @@
 const bull = require('bull');
 const db = require('../../repositories/model/index');
-const {QUEUE_PRE_PROCESSOR} = require('../constants/index'); 
+const {QUEUE_PRE_PROCESSOR, SP_DATE_GENERATOR} = require('../constants/index'); 
 
-var preProcessorQueue = new bull(QUEUE_PRE_PROCESSOR, 'redis://127.0.0.1:6379');
+var preProcessorQueue = new bull(QUEUE_PRE_PROCESSOR, process.env.REDIS_SERVER_URL);
 
 preProcessorQueue.process(async(job) => {
-    return await db.sequelize.query('CALL `employees`.`sp_date_generator`();');
+    return await db.sequelize.query(`CALL ${SP_DATE_GENERATOR}();`);
 });
 
 preProcessorQueue.on('completed', async (job, result) => {
